@@ -2,12 +2,12 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
 }
 
 enum Role {
@@ -22,20 +22,21 @@ enum Gender {
 }
 
 model User {
-    id           String    @id @default(uuid())
-    phone        BigInt    @unique
-    fullName     String?
-    email        String?   @unique
-    role         Role      @default(user)
-    isActive     Boolean   @default(true)
-    isVerified   Boolean   @default(false)
-    gender       Gender?
-    profileImage String?
-    createdAt    DateTime  @default(now())
-    updatedAt    DateTime  @updatedAt
-    address      Address?
-    vehicle      Vehicle[]
-    booking      Booking[]
+    id               String    @id @default(uuid())
+    phone            BigInt    @unique
+    fullName         String?
+    email            String?   @unique
+    role             Role      @default(user)
+    isActive         Boolean   @default(true)
+    isVerified       Boolean   @default(false)
+    isProfileUpdated Boolean   @default(false)
+    gender           Gender?
+    profileImage     String?
+    createdAt        DateTime  @default(now())
+    updatedAt        DateTime  @updatedAt
+    address          Address?
+    vehicle          Vehicle[]
+    booking          Booking[]
 }
 
 model Otp {

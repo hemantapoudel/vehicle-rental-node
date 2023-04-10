@@ -1,7 +1,7 @@
 import { Router } from "express";
 
-import healthCheck from "./healthcheck.route";
+import auth from "./auth.routes";
 
 export const router = Router();
 
-router.use("/healthcheck", healthCheck);
+router.use("/auth", auth);
