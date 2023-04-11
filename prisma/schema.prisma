@@ -28,8 +28,10 @@ model User {
     email            String?   @unique
     role             Role      @default(user)
     isActive         Boolean   @default(true)
-    isVerified       Boolean   @default(false)
+    phoneVerified    Boolean   @default(false)
+    emailVerified    Boolean   @default(false)
     isProfileUpdated Boolean   @default(false)
+    isAddressUpdated Boolean   @default(false)
     gender           Gender?
     profileImage     String?
     createdAt        DateTime  @default(now())

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
-import { registerService, sendOTP, verifyOTP,} from "../services/auth.service";
-import { CreateUserSchema, SendOTPSchema, VerifyOTPSchema } from "../schema/auth.schema";
+import { sendOTP, verifyOTP,} from "../services/auth.service";
+import {SendOTPSchema, VerifyOTPSchema } from "../schema/auth.schema";
 
 export async function sendOTPController(
     req: Request<{},{},SendOTPSchema>,

@@ -2,7 +2,7 @@ import { Router } from "express";
 
 import * as AuthController from "../controllers/auth.controller";
 import { verifyInput } from "../middlewares/verifyInput.middleware";
-import { createUserSchema, sendOTPSchema, verifyOTPSchema,} from "../schema/auth.schema";
+import {sendOTPSchema, verifyOTPSchema,} from "../schema/auth.schema";
 
 const router = Router();
 

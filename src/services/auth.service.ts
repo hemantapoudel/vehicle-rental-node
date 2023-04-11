@@ -14,66 +14,98 @@ function generateJWTToken (data:{id:string,phone:number}) {
 }
 
 export const sendOTP= async (phone: number) => {
-    try {
+    
         const code = verificationCodeGen();
-        await prisma.otp.create({
-            data: {
-                phone,
-                otp: code,
+        let existing_otp = await prisma.otp.findUnique({where:{
+            phone:phone
+        }})
+        if(!existing_otp){
+            await prisma.otp.create({
+                data: {
+                    phone:phone,
+                    otp: code,
+                },
+            });
+        }
+        await prisma.otp.update({
+            where: {
+              phone: phone,
             },
-        });
+            data: {
+              otp: code,
+            },
+          })
+        
 
         const message: string = `Your verification code is ${code}.`;
 
-        await sendSMS(phone, message);
+        //await sendSMS(phone, message);
 
         return "Verification code sent to your phone number";
-    } catch (err) {
-        throw new CustomError(500, "Internal server error");
-    }
+    
 }
 
 export const verifyOTP = async (phone: number, otp:number) => {
-        const user = await prisma.user.findUnique({
-             where:{phone:phone}
-        })
-        
+    
         const actual_otp = await prisma.otp.findUnique({
             where:{
                 phone:phone
             }
         })
+
+        if (!actual_otp) {
+            throw new CustomError(400, "Invalid OTP");
+        }
+    
+        if (actual_otp.otp !== otp) {
+            throw new CustomError(400, "Invalid OTP");
+        }
+        
+        const user = await prisma.user.findUnique({
+            where:{phone:phone}
+       })
+
         if(!user){
-            if(actual_otp && (actual_otp.otp==otp)){
-                await prisma.user.create({data:{
-                    phone:phone,
-                    isVerified:true
-                }})
-                return "OTP Verified Successfully, fillup personal details"
-            } else{
-                throw new CustomError(400,"Invalid OTP")
+            const [userdata, verifyotp] = await prisma.$transaction([
+                prisma.user.create({
+                    data: {
+                        phone:phone,
+                        phoneVerified: true,
+                    },
+                }),
+                prisma.otp.delete({
+                    where: {
+                        phone:phone
+                    },
+                }),
+            ]);
+
+            if (!userdata || !verifyotp) {
+                throw new CustomError(500, "Unexpected Server ERROR");
             }
+
+            let jwttoken = generateJWTToken({
+                id:userdata.id,
+                phone:Number(userdata.phone.toString())
+            })
+            return {token:jwttoken,msg:"Successfully Registered ! Fillup Personal Details"}
         } else{
-            if(actual_otp && (actual_otp.otp==otp)){
-                let jwttoken = generateJWTToken({
-                    id:user.id,
-                    phone:Number(user.phone.toString())
-                })
-                let loggedInUser = {id:user.id,fullName:user.fullName,phone:user.phone.toString(),email:user.email}
-                
-                return {token:jwttoken,msg:"Successfully Logged In",user:loggedInUser}
-            } else{
-                throw new CustomError(400,"Invalid OTP")
-            }
+            let jwttoken = generateJWTToken({
+                id:user.id,
+                phone:Number(user.phone.toString())
+            })
+
+            await prisma.otp.delete({
+                where:{
+                    phone:phone
+                }
+            })
+
+            return {token:jwttoken,msg:"Successfully Logged In !"}
+
         }
 
         
 }
 
-
-
-
-export const registerService = () => {
-    
-}
 
