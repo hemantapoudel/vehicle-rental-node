@@ -14,16 +14,10 @@ export const updateProfileSchema = z.object({
 
         gender: z.enum(["male", "female", "other"]),
 
-        phone: z.number({
-            required_error: "Phone Number is required",
-            invalid_type_error: "Phone Number must be a number",
-        }),
-
         profileImage: z.string({
             required_error: "Image is required",
             invalid_type_error: "Invalid image",   
         }),
-
     }),
 });
 

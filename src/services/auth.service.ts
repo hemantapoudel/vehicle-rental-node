@@ -64,6 +64,7 @@ export const verifyOTP = async (phone: number, otp:number) => {
         const user = await prisma.user.findUnique({
             where:{phone:phone}
        })
+       
 
         if(!user){
             const [userdata, verifyotp] = await prisma.$transaction([

@@ -24,6 +24,7 @@ export async function verifyOTPController(
 ) {
     try {
         const { phone,otp } = req.body;
+        
         const response = await verifyOTP(parseInt(phone, 10),parseInt(otp));
         return res.status(200).json({ success: true, data: response });
     } catch (e: any) {
