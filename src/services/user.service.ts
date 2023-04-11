@@ -16,6 +16,7 @@ export const updateProfile = async (userDetails:UpdateProfileSchema,loggedInUser
             isProfileUpdated: true,
         },
     });
+
     return "Profile Updated Successfully"
 }
 
@@ -28,7 +29,17 @@ export const updateAddress = async (addressDetails:UpdateAddressSchema,loggedInU
             district:district,
             municipality:municipality,
             city:city,
-            street:street
+            street:street,
         },
     })
+    const user = await prisma.user.update({
+        where: {
+            id:loggedInUserData.id,
+        },
+        data: {
+            isAddressUpdated: true,
+        },
+    });
+
+    return "Address Updated Successfully"
 }
