@@ -66,40 +66,38 @@ export const addBrandSchema = z.object({
 });
 
 export const vehicleFeatureSchema = z.object({
-    body: z.object({
-        vehicleId: z.string({
-            required_error: "VehicleID is required",
-            invalid_type_error: "VehicleID must be a string",
-        }),
-
-        color: z.string({
-            required_error: "Vehicle Color is required",
-            invalid_type_error: "Color must be a string",
-        }),
-
-        noOfSeats: z.number({
-            required_error: "No. of seats is required",
-            invalid_type_error: "No. of seats must be number",
-        }),
-
-        noOfDoors: z.number({
-            required_error: "No. of doors is required",
-            invalid_type_error: "No. of doors must be number",
-        }),
-
-        hasAC: z.boolean().optional(),
-        hasAirBag: z.boolean().optional(),
-        hasSunRoof: z.boolean().optional(),
-        hasPowerSteering: z.boolean().optional(),
-        hasUSBPort: z.boolean().optional(),
-        hasBluetooth: z.boolean().optional(),
-        hasKeyLessEntry: z.boolean().optional(),
-        hasHeatedSeats: z.boolean().optional(),
-        hasBackCamera: z.boolean().optional(),
-        hasParkingSensors: z.boolean().optional(),
-        hasAutoDrive: z.boolean().optional(),
-        transmission: z.enum(["automatic", "manual"]),
+    vehicleId: z.string({
+        required_error: "VehicleID is required",
+        invalid_type_error: "VehicleID must be a string",
     }),
+
+    color: z.string({
+        required_error: "Vehicle Color is required",
+        invalid_type_error: "Color must be a string",
+    }),
+
+    noOfSeats: z.number({
+        required_error: "No. of seats is required",
+        invalid_type_error: "No. of seats must be number",
+    }),
+
+    noOfDoors: z.number({
+        required_error: "No. of doors is required",
+        invalid_type_error: "No. of doors must be number",
+    }),
+
+    hasAC: z.boolean().optional(),
+    hasAirBag: z.boolean().optional(),
+    hasSunRoof: z.boolean().optional(),
+    hasPowerSteering: z.boolean().optional(),
+    hasUSBPort: z.boolean().optional(),
+    hasBluetooth: z.boolean().optional(),
+    hasKeyLessEntry: z.boolean().optional(),
+    hasHeatedSeats: z.boolean().optional(),
+    hasBackCamera: z.boolean().optional(),
+    hasParkingSensors: z.boolean().optional(),
+    hasAutoDrive: z.boolean().optional(),
+    transmission: z.enum(["automatic", "manual"]),
 });
 
 export const addVehicleSchema = z.object({
@@ -114,7 +112,7 @@ export const addVehicleSchema = z.object({
             invalid_type_error: "UserId must be a string",
         }),
 
-        type: z.enum(["electric, petrol, diesel"]),
+        type: z.enum(["electric", "petrol", "diesel"]),
 
         categoryId: z.string({
             required_error: "categoryId is required",
@@ -140,6 +138,19 @@ export const addVehicleSchema = z.object({
             required_error: "thumbnail is required",
             invalid_type_error: "thumbnail must be a string",
         }),
+        images: z
+            .string({
+                required_error: "Images is required",
+                invalid_type_error: "Image is invalid",
+            })
+            .array(),
+
+        bluebookPics: z
+            .string({
+                required_error: "Bluebook Images is required",
+                invalid_type_error: "Bluebook Image is invalid",
+            })
+            .array(),
 
         vehicleNumber: z.string({
             required_error: "Vehicle Number is required",
@@ -166,12 +177,19 @@ export const addVehicleSchema = z.object({
             invalid_type_error: "Pickup Address must be a string",
         }),
 
-        driveTrain: z.enum(["frontWheel, rearWheel, fourWheel, allWheel"]),
+        driveTrain: z.enum([
+            "frontWheel",
+            "rearWheel",
+            "fourWheel",
+            "allWheel",
+        ]),
 
         insurancePaperPhoto: z.string({
             required_error: "Insurance Photo is required",
             invalid_type_error: "Insurance Photo is invalid",
         }),
+
+        features: vehicleFeatureSchema,
     }),
 });
 
@@ -179,4 +197,3 @@ export type AddVehicleSchema = TypeOf<typeof addVehicleSchema>["body"];
 export type AddCategorySchema = TypeOf<typeof addCategorySchema>["body"];
 export type AddSubCategorySchema = TypeOf<typeof addSubCategorySchema>["body"];
 export type AddBrandSchema = TypeOf<typeof addBrandSchema>["body"];
-export type VehicleFeatureSchema = TypeOf<typeof vehicleFeatureSchema>["body"];

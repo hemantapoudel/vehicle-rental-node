@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 
 import {} from "../schema/auth.schema";
-import { AddBrandSchema, AddCategorySchema, AddSubCategorySchema } from "../schema/vehicle.schema";
-import { addBrand, addCategory, addSubCategory } from "../services/vehicle.service";
+import { AddBrandSchema, AddCategorySchema, AddSubCategorySchema, AddVehicleSchema } from "../schema/vehicle.schema";
+import { addBrand, addCategory, addSubCategory, addVehicle } from "../services/vehicle.service";
 
 export async function addCategoryController(
     req: Request<{}, {}, AddCategorySchema>,
@@ -39,6 +39,20 @@ export async function addBrandController(
 ) {
     try {
         const response = await addBrand(req.body);
+        return res.status(201).json({ success: true, data: response });
+
+    } catch (e: any) {
+        next(e);
+    }
+}
+
+export async function addVehicleController(
+    req: Request<{}, {}, AddVehicleSchema>,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const response = await addVehicle(req.body);
         return res.status(201).json({ success: true, data: response });
 
     } catch (e: any) {
