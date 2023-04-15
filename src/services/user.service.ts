@@ -1,45 +1,66 @@
-import { UpdateAddressSchema, UpdateProfileSchema } from "../schema/user.schema";
+import {
+    UpdateAddressSchema,
+    UpdateProfileSchema,
+} from "../schema/user.schema";
 import { CustomError } from "../utils/custom_error";
 import { prisma } from "../utils/db";
 
-export const updateProfile = async (userDetails:UpdateProfileSchema,loggedInUserData:any) => {
-    const { fullName, gender, email, profileImage } = userDetails
+export const updateProfile = async (
+    userDetails: UpdateProfileSchema,
+    loggedInUserData: any,
+) => {
+    const { fullName, gender, email, profileImage } = userDetails;
     const user = await prisma.user.update({
         where: {
-            id:loggedInUserData.id,
+            id: loggedInUserData.id,
         },
         data: {
-            fullName:fullName,
-            gender:gender,
-            email:email,
-            profileImage:profileImage,
+            fullName: fullName,
+            gender: gender,
+            email: email,
+            profileImage: profileImage,
             isProfileUpdated: true,
         },
     });
 
-    return "Profile Updated Successfully"
-}
+    return "Profile Updated Successfully";
+};
 
-export const updateAddress = async (addressDetails:UpdateAddressSchema,loggedInUserData:any) => {
-    const {province,district,municipality,city,street} = addressDetails;
+export const updateAddress = async (
+    addressDetails: UpdateAddressSchema,
+    loggedInUserData: any,
+) => {
+    const { province, district, municipality, city, street } = addressDetails;
     const address = await prisma.address.create({
         data: {
-            userId:loggedInUserData.id,
-            province:province,
-            district:district,
-            municipality:municipality,
-            city:city,
-            street:street,
+            userId: loggedInUserData.id,
+            province: province,
+            district: district,
+            municipality: municipality,
+            city: city,
+            street: street,
         },
-    })
+    });
     const user = await prisma.user.update({
         where: {
-            id:loggedInUserData.id,
+            id: loggedInUserData.id,
         },
         data: {
             isAddressUpdated: true,
         },
     });
 
-    return "Address Updated Successfully"
-}
+    return "Address Updated Successfully";
+};
+
+export const getProfile = async (loggedInUser: any) => {
+    const user = await prisma.user.findUnique({
+        where:{
+            id:loggedInUser.id
+        }
+    })
+    const userProfile = {id:user?.id,fullName:user?.fullName,phone:user?.phone.toString()}
+
+    
+    return {msg:"Profile fetched",result:userProfile}
+};

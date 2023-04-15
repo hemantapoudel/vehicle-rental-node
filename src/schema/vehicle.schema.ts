@@ -66,10 +66,6 @@ export const addBrandSchema = z.object({
 });
 
 export const vehicleFeatureSchema = z.object({
-    vehicleId: z.string({
-        required_error: "VehicleID is required",
-        invalid_type_error: "VehicleID must be a string",
-    }),
 
     color: z.string({
         required_error: "Vehicle Color is required",
