@@ -1,5 +1,6 @@
 const multer = require("multer");
 import * as path from 'path';
+const { v4: uuidv4 } = require('uuid');
 
 const myStorage = multer.diskStorage({
     destination: (req:any, file:any, cb:any) => {
@@ -8,7 +9,7 @@ const myStorage = multer.diskStorage({
     },
     filename: (req:any, file:any, cb:any) =>{
 
-        let filename = Date.now()+"."+file.originalname.split(".").pop();
+        let filename = uuidv4()+"."+file.originalname.split(".").pop();
         cb(null, filename);
     },
      

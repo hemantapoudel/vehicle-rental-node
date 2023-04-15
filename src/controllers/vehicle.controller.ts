@@ -52,7 +52,7 @@ export async function addVehicleController(
     next: NextFunction,
 ) {
     try {
-        const response = await addVehicle(req.body);
+        const response = await addVehicle(req.body,res.locals.user);
         return res.status(201).json({ success: true, data: response });
 
     } catch (e: any) {

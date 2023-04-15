@@ -83,7 +83,8 @@ export const vehicleFeatureSchema = z.object({
     }),
 
     hasAC: z.boolean().optional(),
-    hasAirBag: z.boolean().optional(),
+    hasABS: z.boolean().optional(),
+    hasAirbag: z.boolean().optional(),
     hasSunRoof: z.boolean().optional(),
     hasPowerSteering: z.boolean().optional(),
     hasUSBPort: z.boolean().optional(),
@@ -101,11 +102,6 @@ export const addVehicleSchema = z.object({
         title: z.string({
             required_error: "title is required",
             invalid_type_error: "title must be a string",
-        }),
-
-        addedById: z.string({
-            required_error: "UserId is required",
-            invalid_type_error: "UserId must be a string",
         }),
 
         type: z.enum(["electric", "petrol", "diesel"]),

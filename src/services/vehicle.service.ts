@@ -47,10 +47,9 @@ export const addBrand = async (brandDetails: AddBrandSchema) => {
     return { msg: "Brand added", result: brand };
 };
 
-export const addVehicle = async (vehicleDetails: AddVehicleSchema) => {
+export const addVehicle = async (vehicleDetails: AddVehicleSchema, loggedInUser:any) => {
     const {
         title,
-        addedById,
         type,
         categoryId,
         subCategoryId,
@@ -72,7 +71,7 @@ export const addVehicle = async (vehicleDetails: AddVehicleSchema) => {
     const vehicle = await prisma.vehicle.create({
         data: {
             title,
-            addedById,
+            addedById:loggedInUser.id,
             type,
             categoryId,
             subCategoryId,
@@ -91,11 +90,7 @@ export const addVehicle = async (vehicleDetails: AddVehicleSchema) => {
             features:{
                 create:features
             } 
-        },
-
-        select: {
-            bluebookPics: false,
-        },
+        }
     });
     return { msg: "Vehicle added", result: vehicle };
 };
