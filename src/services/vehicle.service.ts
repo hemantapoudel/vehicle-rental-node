@@ -1,3 +1,4 @@
+import { VehicleType } from "@prisma/client";
 import { features } from "process";
 import {
     AddBrandSchema,
@@ -94,3 +95,46 @@ export const addVehicle = async (vehicleDetails: AddVehicleSchema, loggedInUser:
     });
     return { msg: "Vehicle added", result: vehicle };
 };
+
+export const listAllVehicle = async () => {
+    let vehicles = await prisma.vehicle.findMany({
+        where:{
+            isVerified:true
+        },
+        select:{
+            id:true,
+            title:true,
+            addedById:true,
+            type:true,
+            category:{
+                select:{
+                    id:true,
+                    title:true
+                }
+            },
+            subCategory:{
+                select:{
+                    id:true,
+                    title:true
+                }
+            },
+            brand:{
+                select:{
+                    id:true,
+                    title:true,
+                    logo:true
+                }
+            },
+            model:true,
+            thumbnail:true
+        }
+    })
+    vehicles.map(vehicle => {
+        vehicle.thumbnail = `http://localhost:8080/uploads/${vehicle.thumbnail}`;
+        vehicle.brand.logo = `http://localhost:8080/uploads/${vehicle.brand.logo}`;
+        return vehicle;
+      });
+
+
+    return {msg:"Vehicles fetched", result:vehicles}
+}

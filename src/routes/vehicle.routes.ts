@@ -12,6 +12,7 @@ router.post("/add/category", verifyInput(addCategorySchema), VehicleController.a
 router.post("/add/subcategory", verifyInput(addSubCategorySchema),VehicleController.addSubCategoryController);
 router.post("/add/brand", verifyInput(addBrandSchema),VehicleController.addBrandController);
 router.post("/add/vehicle", isLoggedIn,verifyInput(addVehicleSchema),VehicleController.addVehicleController);
+router.get("/listall/vehicle", isLoggedIn,VehicleController.listAllVehicleController);
 
 
 export default router;
