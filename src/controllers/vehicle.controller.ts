@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 
 import {} from "../schema/auth.schema";
 import { AddBrandSchema, AddCategorySchema, AddSubCategorySchema, AddVehicleSchema } from "../schema/vehicle.schema";
-import { addBrand, addCategory, addSubCategory, addVehicle, listAllVehicle } from "../services/vehicle.service";
+import { addBrand, addCategory, addSubCategory, addVehicle, getVehiclesNearMe, listAllVehicle } from "../services/vehicle.service";
 
 export async function addCategoryController(
     req: Request<{}, {}, AddCategorySchema>,
@@ -67,6 +67,21 @@ export async function listAllVehicleController(
 ) {
     try {
         const response = await listAllVehicle();
+        return res.status(201).json({ success: true, data: response });
+
+    } catch (e: any) {
+        next(e);
+    }
+}
+
+
+export async function getVehiclesNearMeController(
+    req: Request<{}, {}, {lat:number,lon:number}>,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const response = await getVehiclesNearMe(req.body.lat,req.body.lon);
         return res.status(201).json({ success: true, data: response });
 
     } catch (e: any) {

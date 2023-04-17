@@ -7,6 +7,7 @@ import {
     AddVehicleSchema,
     vehicleFeatureSchema
 } from "../schema/vehicle.schema";
+import { calculateDistance } from "../utils/calculateDistance";
 import { prisma } from "../utils/db";
 
 export const addCategory = async (categoryDetails: AddCategorySchema) => {
@@ -137,4 +138,49 @@ export const listAllVehicle = async () => {
 
 
     return {msg:"Vehicles fetched", result:vehicles}
+}
+
+export const getVehiclesNearMe = async (lat:number,lon:number) => {
+    let allVehicles = await prisma.vehicle.findMany({
+        where:{
+            isVerified:true
+        },
+        select:{
+            id:true,
+            title:true,
+            addedById:true,
+            type:true,
+            category:{
+                select:{
+                    id:true,
+                    title:true
+                }
+            },
+            subCategory:{
+                select:{
+                    id:true,
+                    title:true
+                }
+            },
+            brand:{
+                select:{
+                    id:true,
+                    title:true,
+                    logo:true
+                }
+            },
+            model:true,
+            thumbnail:true,
+            pickupAddress:true
+        }
+    })
+    let newArr = []
+    
+    for(let i=0; i<allVehicles.length; i++){
+        let distance = calculateDistance(lat,lon,Number(allVehicles[i].pickupAddress[0]),Number(allVehicles[i].pickupAddress[1]));
+        if(distance<=15){
+            newArr.push(allVehicles[i])
+        }
+    }
+    return {msg:"Vehicles near me fetched", result:newArr}
 }

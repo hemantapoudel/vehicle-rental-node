@@ -110,7 +110,7 @@ model Vehicle {
     description         String
     rentGuidelines      String
     rate                String
-    pickupAddress       String
+    pickupAddress       String[]
     driveTrain          DriveTrain
     insurancePaperPhoto String
     createdAt           DateTime        @default(now())
