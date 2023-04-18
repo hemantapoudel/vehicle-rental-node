@@ -175,7 +175,7 @@ model VehicleFeature {
 model Booking {
     id          String   @id @default(uuid())
     Vehicle     Vehicle  @relation(fields: [vehicleId], references: [id])
-    vehicleId   String
+    vehicleId   String   @unique
     startDate   DateTime
     endDate     DateTime
     description String

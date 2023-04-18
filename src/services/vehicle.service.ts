@@ -5,7 +5,7 @@ import {
     AddCategorySchema,
     AddSubCategorySchema,
     AddVehicleSchema,
-    vehicleFeatureSchema
+    vehicleFeatureSchema,
 } from "../schema/vehicle.schema";
 import { calculateDistance } from "../utils/calculateDistance";
 import { prisma } from "../utils/db";
@@ -49,7 +49,10 @@ export const addBrand = async (brandDetails: AddBrandSchema) => {
     return { msg: "Brand added", result: brand };
 };
 
-export const addVehicle = async (vehicleDetails: AddVehicleSchema, loggedInUser:any) => {
+export const addVehicle = async (
+    vehicleDetails: AddVehicleSchema,
+    loggedInUser: any,
+) => {
     const {
         title,
         type,
@@ -67,13 +70,13 @@ export const addVehicle = async (vehicleDetails: AddVehicleSchema, loggedInUser:
         pickupAddress,
         driveTrain,
         insurancePaperPhoto,
-        features
+        features,
     } = vehicleDetails;
 
     const vehicle = await prisma.vehicle.create({
         data: {
             title,
-            addedById:loggedInUser.id,
+            addedById: loggedInUser.id,
             type,
             categoryId,
             subCategoryId,
@@ -89,98 +92,104 @@ export const addVehicle = async (vehicleDetails: AddVehicleSchema, loggedInUser:
             pickupAddress,
             driveTrain,
             insurancePaperPhoto,
-            features:{
-                create:features
-            } 
-        }
+            features: {
+                create: features,
+            },
+        },
     });
     return { msg: "Vehicle added", result: vehicle };
 };
 
 export const listAllVehicle = async () => {
     let vehicles = await prisma.vehicle.findMany({
-        where:{
-            isVerified:true
+        where: {
+            isVerified: true,
         },
-        select:{
-            id:true,
-            title:true,
-            addedById:true,
-            type:true,
-            category:{
-                select:{
-                    id:true,
-                    title:true
-                }
+        select: {
+            id: true,
+            title: true,
+            addedById: true,
+            type: true,
+            category: {
+                select: {
+                    id: true,
+                    title: true,
+                },
             },
-            subCategory:{
-                select:{
-                    id:true,
-                    title:true
-                }
+            subCategory: {
+                select: {
+                    id: true,
+                    title: true,
+                },
             },
-            brand:{
-                select:{
-                    id:true,
-                    title:true,
-                    logo:true
-                }
+            brand: {
+                select: {
+                    id: true,
+                    title: true,
+                    logo: true,
+                },
             },
-            model:true,
-            thumbnail:true
-        }
-    })
-    vehicles.map(vehicle => {
+            model: true,
+            thumbnail: true,
+            isBooked:true
+        },
+    });
+    vehicles.map((vehicle) => {
         vehicle.thumbnail = `http://localhost:8080/uploads/${vehicle.thumbnail}`;
         vehicle.brand.logo = `http://localhost:8080/uploads/${vehicle.brand.logo}`;
         return vehicle;
-      });
+    });
 
+    return { msg: "Vehicles fetched", result: vehicles };
+};
 
-    return {msg:"Vehicles fetched", result:vehicles}
-}
-
-export const getVehiclesNearMe = async (lat:number,lon:number) => {
+export const getVehiclesNearMe = async (lat: number, lon: number) => {
     let allVehicles = await prisma.vehicle.findMany({
-        where:{
-            isVerified:true
+        where: {
+            isVerified: true,
         },
-        select:{
-            id:true,
-            title:true,
-            addedById:true,
-            type:true,
-            category:{
-                select:{
-                    id:true,
-                    title:true
-                }
+        select: {
+            id: true,
+            title: true,
+            addedById: true,
+            type: true,
+            category: {
+                select: {
+                    id: true,
+                    title: true,
+                },
             },
-            subCategory:{
-                select:{
-                    id:true,
-                    title:true
-                }
+            subCategory: {
+                select: {
+                    id: true,
+                    title: true,
+                },
             },
-            brand:{
-                select:{
-                    id:true,
-                    title:true,
-                    logo:true
-                }
+            brand: {
+                select: {
+                    id: true,
+                    title: true,
+                    logo: true,
+                },
             },
-            model:true,
-            thumbnail:true,
-            pickupAddress:true
-        }
-    })
-    let newArr = []
-    
-    for(let i=0; i<allVehicles.length; i++){
-        let distance = calculateDistance(lat,lon,Number(allVehicles[i].pickupAddress[0]),Number(allVehicles[i].pickupAddress[1]));
-        if(distance<=15){
-            newArr.push(allVehicles[i])
+            model: true,
+            thumbnail: true,
+            pickupAddress: true,
+            isBooked:true
+        },
+    });
+    let newArr = [];
+
+    for (let i = 0; i < allVehicles.length; i++) {
+        let distance = calculateDistance(
+            lat,
+            lon,
+            Number(allVehicles[i].pickupAddress[0]),
+            Number(allVehicles[i].pickupAddress[1]),
+        );
+        if (distance <= 15) {
+            newArr.push(allVehicles[i]);
         }
     }
-    return {msg:"Vehicles near me fetched", result:newArr}
-}
+    return { msg: "Vehicles near me fetched", result: newArr };
+};
