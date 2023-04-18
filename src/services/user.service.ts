@@ -64,14 +64,13 @@ export const getProfile = async (loggedInUser: any) => {
             phone:true,
             email:true,
             address:true,
-            
+
         }
     })
     //const userProfile = {id:user?.id,fullName:user?.fullName,phone:user?.phone.toString()}
-
-    
     return {msg:"Profile fetched",result:{...user,phone:Number(user?.phone)}}
 };
+
 
 
 

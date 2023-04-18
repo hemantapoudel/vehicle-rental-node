@@ -9,6 +9,7 @@ import {
 } from "../schema/vehicle.schema";
 import { calculateDistance } from "../utils/calculateDistance";
 import { prisma } from "../utils/db";
+import config from "../config/env";
 
 export const addCategory = async (categoryDetails: AddCategorySchema) => {
     const { title, description, logo } = categoryDetails;
@@ -131,12 +132,12 @@ export const listAllVehicle = async () => {
             },
             model: true,
             thumbnail: true,
-            isBooked:true
+            isBooked: true,
         },
     });
     vehicles.map((vehicle) => {
-        vehicle.thumbnail = `http://localhost:8080/uploads/${vehicle.thumbnail}`;
-        vehicle.brand.logo = `http://localhost:8080/uploads/${vehicle.brand.logo}`;
+        vehicle.thumbnail = `${config.UPLOADS}${vehicle.thumbnail}`;
+        vehicle.brand.logo = `${config.UPLOADS}${vehicle.brand.logo}`;
         return vehicle;
     });
 
@@ -175,21 +176,35 @@ export const getVehiclesNearMe = async (lat: number, lon: number) => {
             model: true,
             thumbnail: true,
             pickupAddress: true,
-            isBooked:true
+            isBooked: true,
         },
     });
-    let newArr = [];
+
+    let newArr: Array<any> = [];
 
     for (let i = 0; i < allVehicles.length; i++) {
-        let distance = calculateDistance(
+        const distance = calculateDistance(
             lat,
             lon,
             Number(allVehicles[i].pickupAddress[0]),
             Number(allVehicles[i].pickupAddress[1]),
         );
+
+        const newVehicleList = {
+            ...allVehicles[i],
+            distance,
+        };
+
         if (distance <= 15) {
-            newArr.push(allVehicles[i]);
+            newArr.push(newVehicleList);
         }
     }
+
+    newArr.map((vehicle) => {
+        vehicle.thumbnail = `${config.UPLOADS}${vehicle.thumbnail}`;
+        vehicle.brand.logo = `${config.UPLOADS}${vehicle.brand.logo}`;
+        return vehicle;
+    });
+
     return { msg: "Vehicles near me fetched", result: newArr };
 };

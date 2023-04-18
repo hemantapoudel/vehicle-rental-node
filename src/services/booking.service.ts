@@ -74,30 +74,30 @@ export const cancelBooking = async (vehicleId: string, loggedInUser: any) => {
 export const deleteExpiredBookings = async (): Promise<void> => {
     const currentDate = new Date();
     const expiredBookings = await prisma.booking.findMany({
-      where: {
-        endDate: {
-          lte: currentDate,
+        where: {
+            endDate: {
+                lte: currentDate,
+            },
         },
-      },
     });
-  
+
     await Promise.all(
-      expiredBookings.map(async (booking) => {
-        await prisma.$transaction([
-            prisma.vehicle.update({
-                where: {
-                  id: booking.vehicleId,
-                },
-                data: {
-                  isBooked: false,
-                },
-              }),
-            prisma.booking.delete({
-                where: {
-                  id: booking.id,
-                },
-              })
-        ]) 
-      })
+        expiredBookings.map(async (booking) => {
+            await prisma.$transaction([
+                prisma.vehicle.update({
+                    where: {
+                        id: booking.vehicleId,
+                    },
+                    data: {
+                        isBooked: false,
+                    },
+                }),
+                prisma.booking.delete({
+                    where: {
+                        id: booking.id,
+                    },
+                }),
+            ]);
+        }),
     );
-  };
+};
