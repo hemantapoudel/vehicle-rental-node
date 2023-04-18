@@ -1,3 +1,4 @@
+import exp from "constants";
 import { CustomError } from "../utils/custom_error";
 import { prisma } from "../utils/db";
 
@@ -69,3 +70,34 @@ export const cancelBooking = async (vehicleId: string, loggedInUser: any) => {
     ]);
     return "Booking cancelled";
 };
+
+export const deleteExpiredBookings = async (): Promise<void> => {
+    const currentDate = new Date();
+    const expiredBookings = await prisma.booking.findMany({
+      where: {
+        endDate: {
+          lte: currentDate,
+        },
+      },
+    });
+  
+    await Promise.all(
+      expiredBookings.map(async (booking) => {
+        await prisma.$transaction([
+            prisma.vehicle.update({
+                where: {
+                  id: booking.vehicleId,
+                },
+                data: {
+                  isBooked: false,
+                },
+              }),
+            prisma.booking.delete({
+                where: {
+                  id: booking.id,
+                },
+              })
+        ]) 
+      })
+    );
+  };
