@@ -23,6 +23,35 @@ export const addCategory = async (categoryDetails: AddCategorySchema) => {
     return { msg: "Category added", result: category };
 };
 
+export const updateCategory = async (id:string, categoryDetails: any) => {
+    const { title, description, logo } = categoryDetails;
+    const category = await prisma.category.update({
+        where:{
+            id:id
+        },
+        data: {
+            title,
+            description,
+            logo,
+        },
+    });
+    return { msg: "Category updated"};
+};
+
+export const listAllCategory = async () => {
+    const category = await prisma.category.findMany()
+    return { msg: "ALl Category Fetched", result: category };
+};
+
+export const deleteCategory = async (id:string) => {
+    await prisma.category.delete({
+        where:{
+            id:id
+        }
+    })
+    return { msg: "Category Deleted"};
+};
+
 export const addSubCategory = async (
     subCategoryDetails: AddSubCategorySchema,
 ) => {

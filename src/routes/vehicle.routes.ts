@@ -8,7 +8,15 @@ import { addSubCategory } from "../services/vehicle.service";
 
 const router = Router();
 
-router.post("/add/category", verifyInput(addCategorySchema), VehicleController.addCategoryController);
+router.post("/category/add", verifyInput(addCategorySchema), VehicleController.addCategoryController);
+router.put("/category/update/:id", VehicleController.updateCategoryController);
+router.get("/category/listall", VehicleController.listAllCategoryController);
+router.delete("/category/delete/:id", VehicleController.deleteCategoryController);
+
+
+
+
+
 router.post("/add/subcategory", verifyInput(addSubCategorySchema),VehicleController.addSubCategoryController);
 router.post("/add/brand", verifyInput(addBrandSchema),VehicleController.addBrandController);
 router.post("/add/vehicle", isLoggedIn,verifyInput(addVehicleSchema),VehicleController.addVehicleController);

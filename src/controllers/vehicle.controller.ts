@@ -1,8 +1,23 @@
 import { NextFunction, Request, Response } from "express";
 
 import {} from "../schema/auth.schema";
-import { AddBrandSchema, AddCategorySchema, AddSubCategorySchema, AddVehicleSchema } from "../schema/vehicle.schema";
-import { addBrand, addCategory, addSubCategory, addVehicle, getVehiclesNearMe, listAllVehicle } from "../services/vehicle.service";
+import {
+    AddBrandSchema,
+    AddCategorySchema,
+    AddSubCategorySchema,
+    AddVehicleSchema,
+} from "../schema/vehicle.schema";
+import {
+    addBrand,
+    addCategory,
+    addSubCategory,
+    addVehicle,
+    deleteCategory,
+    getVehiclesNearMe,
+    listAllCategory,
+    listAllVehicle,
+    updateCategory,
+} from "../services/vehicle.service";
 
 export async function addCategoryController(
     req: Request<{}, {}, AddCategorySchema>,
@@ -12,7 +27,45 @@ export async function addCategoryController(
     try {
         const response = await addCategory(req.body);
         return res.status(201).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}
 
+export async function updateCategoryController(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const response = await updateCategory(req.params.id, req.body);
+        return res.status(200).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}
+
+export async function listAllCategoryController(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const response = await listAllCategory();
+        return res.status(200).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}
+
+export async function deleteCategoryController(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const response = await deleteCategory(req.params.id);
+        return res.status(200).json({ success: true, data: response });
     } catch (e: any) {
         next(e);
     }
@@ -26,7 +79,6 @@ export async function addSubCategoryController(
     try {
         const response = await addSubCategory(req.body);
         return res.status(201).json({ success: true, data: response });
-
     } catch (e: any) {
         next(e);
     }
@@ -40,7 +92,6 @@ export async function addBrandController(
     try {
         const response = await addBrand(req.body);
         return res.status(201).json({ success: true, data: response });
-
     } catch (e: any) {
         next(e);
     }
@@ -52,9 +103,8 @@ export async function addVehicleController(
     next: NextFunction,
 ) {
     try {
-        const response = await addVehicle(req.body,res.locals.user);
+        const response = await addVehicle(req.body, res.locals.user);
         return res.status(201).json({ success: true, data: response });
-
     } catch (e: any) {
         next(e);
     }
@@ -68,22 +118,19 @@ export async function listAllVehicleController(
     try {
         const response = await listAllVehicle();
         return res.status(201).json({ success: true, data: response });
-
     } catch (e: any) {
         next(e);
     }
 }
 
-
 export async function getVehiclesNearMeController(
-    req: Request<{}, {}, {lat:number,lon:number}>,
+    req: Request<{}, {}, { lat: number; lon: number }>,
     res: Response,
     next: NextFunction,
 ) {
     try {
-        const response = await getVehiclesNearMe(req.body.lat,req.body.lon);
+        const response = await getVehiclesNearMe(req.body.lat, req.body.lon);
         return res.status(201).json({ success: true, data: response });
-
     } catch (e: any) {
         next(e);
     }
