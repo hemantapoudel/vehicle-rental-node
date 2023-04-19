@@ -13,10 +13,13 @@ import {
     addSubCategory,
     addVehicle,
     deleteCategory,
+    deleteSubCategory,
     getVehiclesNearMe,
     listAllCategory,
+    listAllSubCategory,
     listAllVehicle,
     updateCategory,
+    updateSubCategory,
 } from "../services/vehicle.service";
 
 export async function addCategoryController(
@@ -83,6 +86,46 @@ export async function addSubCategoryController(
         next(e);
     }
 }
+
+export async function updateSubCategoryController(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const response = await updateSubCategory(req.params.id, req.body);
+        return res.status(200).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}
+
+export async function listAllSubCategoryController(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const response = await listAllSubCategory();
+        return res.status(200).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}
+
+export async function deleteSubCategoryController(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const response = await deleteSubCategory(req.params.id);
+        return res.status(200).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}
+
 
 export async function addBrandController(
     req: Request<{}, {}, AddBrandSchema>,

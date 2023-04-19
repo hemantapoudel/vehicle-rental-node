@@ -67,6 +67,37 @@ export const addSubCategory = async (
     return { msg: "Category added", result: subCategory };
 };
 
+export const updateSubCategory = async (id:string, subCategoryDetails: any,) => {
+    const { title, description, categoryId, logo } = subCategoryDetails;
+    const subCategory = await prisma.subCategory.update({
+        where:{
+            id:id
+        },
+        data: {
+            title,
+            description,
+            logo,
+            categoryId,
+        },
+    });
+    return { msg: "Category Updated"};
+};
+
+export const listAllSubCategory = async () => {
+    const subCategory = await prisma.subCategory.findMany()
+    return { msg: "ALl Sub Categories Fetched", result: subCategory };
+};
+
+export const deleteSubCategory = async (id:string) => {
+    await prisma.subCategory.delete({
+        where:{
+            id:id
+        }
+    })
+    return { msg: "Sub-Category Deleted"};
+};
+
+
 export const addBrand = async (brandDetails: AddBrandSchema) => {
     const { title, description, logo } = brandDetails;
     const brand = await prisma.brand.create({

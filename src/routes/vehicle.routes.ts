@@ -13,11 +13,14 @@ router.put("/category/update/:id", VehicleController.updateCategoryController);
 router.get("/category/listall", VehicleController.listAllCategoryController);
 router.delete("/category/delete/:id", VehicleController.deleteCategoryController);
 
+router.post("/subcategory/add", verifyInput(addSubCategorySchema),VehicleController.addSubCategoryController);
+router.put("/subcategory/update/:id", VehicleController.updateSubCategoryController);
+router.get("/subcategory/listall", VehicleController.listAllSubCategoryController);
+router.delete("/subcategory/delete/:id", VehicleController.deleteSubCategoryController);
 
 
 
 
-router.post("/add/subcategory", verifyInput(addSubCategorySchema),VehicleController.addSubCategoryController);
 router.post("/add/brand", verifyInput(addBrandSchema),VehicleController.addBrandController);
 router.post("/add/vehicle", isLoggedIn,verifyInput(addVehicleSchema),VehicleController.addVehicleController);
 router.get("/listall/vehicle", isLoggedIn,VehicleController.listAllVehicleController);
