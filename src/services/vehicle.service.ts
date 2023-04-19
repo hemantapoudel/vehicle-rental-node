@@ -110,6 +110,36 @@ export const addBrand = async (brandDetails: AddBrandSchema) => {
     return { msg: "Brand added", result: brand };
 };
 
+export const updateBrand = async (id:string, brandDetails: any,) => {
+    const { title, description, logo } = brandDetails;
+    const brand = await prisma.brand.update({
+        where:{
+            id:id
+        },
+        data: {
+            title,
+            description,
+            logo
+        },
+    });
+    return { msg: "Brand Updated"};
+};
+
+export const listAllBrands = async () => {
+    const brands = await prisma.brand.findMany()
+    return { msg: "ALl Brands Fetched", result: brands };
+};
+
+export const deleteBrand = async (id:string) => {
+    await prisma.brand.delete({
+        where:{
+            id:id
+        }
+    })
+    return { msg: "Brand Deleted"};
+};
+
+
 export const addVehicle = async (
     vehicleDetails: AddVehicleSchema,
     loggedInUser: any,

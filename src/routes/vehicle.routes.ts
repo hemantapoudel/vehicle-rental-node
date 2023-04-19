@@ -18,10 +18,13 @@ router.put("/subcategory/update/:id", VehicleController.updateSubCategoryControl
 router.get("/subcategory/listall", VehicleController.listAllSubCategoryController);
 router.delete("/subcategory/delete/:id", VehicleController.deleteSubCategoryController);
 
+router.post("/brand/add", verifyInput(addBrandSchema),VehicleController.addBrandController);
+router.put("/brand/update/:id", VehicleController.updateBrandController);
+router.get("/brand/listall", VehicleController.listAllBrandController);
+router.delete("/brand/delete/:id", VehicleController.deleteBrandController);
 
 
 
-router.post("/add/brand", verifyInput(addBrandSchema),VehicleController.addBrandController);
 router.post("/add/vehicle", isLoggedIn,verifyInput(addVehicleSchema),VehicleController.addVehicleController);
 router.get("/listall/vehicle", isLoggedIn,VehicleController.listAllVehicleController);
 router.get("/listall/nearme", isLoggedIn,VehicleController.getVehiclesNearMeController);
