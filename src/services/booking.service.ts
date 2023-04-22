@@ -10,10 +10,10 @@ export const booking = async (
 ) => {
     let alreadyBooked = await prisma.booking.findUnique({
         where: {
-            vehicleId: vehicleId,
+            vehicleId: vehicleId
         },
     });
-
+    console.log(alreadyBooked)
     if (alreadyBooked) {
         throw new CustomError(400, "Vehicle Already Booked");
     }
@@ -37,13 +37,14 @@ export const booking = async (
             },
         }),
     ]);
-    return "Vehicle Booked";
+    return {msg:"Vehicle Booked"};
 };
 
 export const cancelBooking = async (vehicleId: string, loggedInUser: any) => {
     let booked = await prisma.booking.findUnique({
         where: {
             vehicleId: vehicleId,
+            
         },
     });
 
@@ -68,7 +69,7 @@ export const cancelBooking = async (vehicleId: string, loggedInUser: any) => {
             },
         }),
     ]);
-    return "Booking cancelled";
+    return {msg:"Booking cancelled"};
 };
 
 export const deleteExpiredBookings = async (): Promise<void> => {
@@ -101,3 +102,36 @@ export const deleteExpiredBookings = async (): Promise<void> => {
         }),
     );
 };
+
+
+export const myBookings = async (loggedInUser: any) => {
+    let myBookings = await prisma.booking.findMany({
+        where:{
+            bookedById:loggedInUser.id
+        },
+        select:{
+            Vehicle:{
+                select:{
+                    title:true,
+                    thumbnail:true
+                }
+            },
+            startDate:true,
+            endDate:true,
+            isAccepted:true
+        }
+    })
+    return {msg:"Bookings fetched", result:myBookings}
+}
+
+export const myBookingRequests = async (loggedInUser:any) => {
+    let bookingRequests = await prisma.booking.findMany({
+        where:{
+            Vehicle: {
+                addedById: loggedInUser.id
+            }
+        }
+    })
+    return {msg:"Booking Requests fetched", result: bookingRequests}
+}
+
