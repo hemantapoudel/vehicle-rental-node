@@ -17,6 +17,8 @@ router.post("/subcategory/add", verifyInput(addSubCategorySchema),VehicleControl
 router.put("/subcategory/update/:id", VehicleController.updateSubCategoryController);
 router.get("/subcategory/listall", VehicleController.listAllSubCategoryController);
 router.delete("/subcategory/delete/:id", VehicleController.deleteSubCategoryController);
+router.post("/subcategory/findbycategory", VehicleController.findSubCategoryFromCategoryController);
+
 
 router.post("/brand/add", verifyInput(addBrandSchema),VehicleController.addBrandController);
 router.put("/brand/update/:id", VehicleController.updateBrandController);

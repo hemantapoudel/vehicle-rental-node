@@ -1,4 +1,3 @@
-import exp from "constants";
 import { CustomError } from "../utils/custom_error";
 import { prisma } from "../utils/db";
 
@@ -10,10 +9,10 @@ export const booking = async (
 ) => {
     let alreadyBooked = await prisma.booking.findUnique({
         where: {
-            vehicleId: vehicleId
+            vehicleId: vehicleId,
         },
     });
-    console.log(alreadyBooked)
+    console.log(alreadyBooked);
     if (alreadyBooked) {
         throw new CustomError(400, "Vehicle Already Booked");
     }
@@ -37,14 +36,13 @@ export const booking = async (
             },
         }),
     ]);
-    return {msg:"Vehicle Booked"};
+    return { msg: "Vehicle Booked" };
 };
 
 export const cancelBooking = async (vehicleId: string, loggedInUser: any) => {
     let booked = await prisma.booking.findUnique({
         where: {
             vehicleId: vehicleId,
-            
         },
     });
 
@@ -69,10 +67,10 @@ export const cancelBooking = async (vehicleId: string, loggedInUser: any) => {
             },
         }),
     ]);
-    return {msg:"Booking cancelled"};
+    return { msg: "Booking cancelled" };
 };
 
-export const deleteExpiredBookings = async (): Promise<void> => {
+export const deleteExpiredBookings = async () => {
     const currentDate = new Date();
     const expiredBookings = await prisma.booking.findMany({
         where: {
@@ -103,70 +101,63 @@ export const deleteExpiredBookings = async (): Promise<void> => {
     );
 };
 
-
 export const myBookings = async (loggedInUser: any) => {
     let myBookings = await prisma.booking.findMany({
-        where:{
-            bookedById:loggedInUser.id
+        where: {
+            bookedById: loggedInUser.id,
         },
-        select:{
-            Vehicle:{
-                select:{
-                    id:true,
-                    title:true,
-                    thumbnail:true
-                }
-            },
-            startDate:true,
-            endDate:true,
-            isAccepted:true
-        }
-    })
-    return {msg:"Bookings fetched", result:myBookings}
-}
-
-export const myBookingRequests = async (loggedInUser:any) => {
-    let bookingRequests = await prisma.booking.findMany({
-        where:{
+        select: {
             Vehicle: {
-                addedById: loggedInUser.id
+                select: {
+                    id: true,
+                    title: true,
+                    thumbnail: true,
+                },
             },
+            startDate: true,
+            endDate: true,
+            isAccepted: true,
         },
-        select:{
-            Vehicle:{
-                select:{
-                    id:true,
-                    title:true,
-                    thumbnail:true
-                }
-            },
-            startDate:true,
-            endDate:true,
-            isAccepted:true
-        }
-    })
-    return {msg:"Booking Requests fetched", result: bookingRequests}
-}
+    });
+    return { msg: "Bookings fetched", result: myBookings };
+};
 
-export const acceptOrRejectBookings = async (loggedInUser:any,isAccepted:Boolean) => {
+export const myBookingRequests = async (loggedInUser: any) => {
     let bookingRequests = await prisma.booking.findMany({
-        where:{
+        where: {
             Vehicle: {
-                addedById: loggedInUser.id
+                addedById: loggedInUser.id,
             },
         },
-        select:{
-            Vehicle:{
-                select:{
-                    id:true,
-                    title:true,
-                    thumbnail:true
-                }
+        select: {
+            id: true,
+            Vehicle: {
+                select: {
+                    id: true,
+                    title: true,
+                    thumbnail: true,
+                },
             },
-            startDate:true,
-            endDate:true,
-            isAccepted:true
-        }
-    })
+            startDate: true,
+            endDate: true,
+            isAccepted: true,
+        },
+    });
+    return { msg: "Booking Requests fetched", result: bookingRequests };
+};
 
-}
+export const acceptOrRejectBooking = async (
+    loggedInUser: any,
+    isAccepted: boolean,
+    id: string,
+) => {
+    let update = await prisma.booking.update({
+        where: {
+            id,
+        },
+        data: {
+            isAccepted,
+        },
+    });
+    return { msg: `Booking ${isAccepted ? "Accepted" : "Rejected"}` };
+};

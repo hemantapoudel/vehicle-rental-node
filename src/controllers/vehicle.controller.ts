@@ -15,6 +15,7 @@ import {
     deleteBrand,
     deleteCategory,
     deleteSubCategory,
+    findSubCategoryFromCategory,
     getVehiclesNearMe,
     listAllBrands,
     listAllCategory,
@@ -123,6 +124,19 @@ export async function deleteSubCategoryController(
 ) {
     try {
         const response = await deleteSubCategory(req.params.id);
+        return res.status(200).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}
+
+export async function findSubCategoryFromCategoryController(
+    req: Request ,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const response = await findSubCategoryFromCategory(req.body.categoryId);
         return res.status(200).json({ success: true, data: response });
     } catch (e: any) {
         next(e);
