@@ -89,8 +89,10 @@ export const verifyOTP = async (phone: number, otp:number) => {
                 id:userdata.id,
                 phone:Number(userdata.phone.toString())
             })
-            return {token:jwttoken,msg:"Successfully Registered ! Fillup Personal Details"}
-        } else{
+            return {token:jwttoken,msg:"Successfully Registered ! Fillup Personal Details", isProfileUpdated:userdata.isProfileUpdated, isAddressUpdated:userdata.isAddressUpdated}
+        } 
+        
+        else{
             let jwttoken = generateJWTToken({
                 id:user.id,
                 phone:Number(user.phone.toString())
@@ -102,7 +104,7 @@ export const verifyOTP = async (phone: number, otp:number) => {
                 }
             })
 
-            return {token:jwttoken,msg:"Successfully Logged In !"}
+            return {token:jwttoken,msg:"Successfully Logged In !", isProfileUpdated:user.isProfileUpdated, isAddressUpdated:user.isAddressUpdated}
 
         }
 

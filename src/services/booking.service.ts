@@ -112,6 +112,7 @@ export const myBookings = async (loggedInUser: any) => {
         select:{
             Vehicle:{
                 select:{
+                    id:true,
                     title:true,
                     thumbnail:true
                 }
@@ -129,9 +130,43 @@ export const myBookingRequests = async (loggedInUser:any) => {
         where:{
             Vehicle: {
                 addedById: loggedInUser.id
-            }
+            },
+        },
+        select:{
+            Vehicle:{
+                select:{
+                    id:true,
+                    title:true,
+                    thumbnail:true
+                }
+            },
+            startDate:true,
+            endDate:true,
+            isAccepted:true
         }
     })
     return {msg:"Booking Requests fetched", result: bookingRequests}
 }
 
+export const acceptOrRejectBookings = async (loggedInUser:any,isAccepted:Boolean) => {
+    let bookingRequests = await prisma.booking.findMany({
+        where:{
+            Vehicle: {
+                addedById: loggedInUser.id
+            },
+        },
+        select:{
+            Vehicle:{
+                select:{
+                    id:true,
+                    title:true,
+                    thumbnail:true
+                }
+            },
+            startDate:true,
+            endDate:true,
+            isAccepted:true
+        }
+    })
+
+}
