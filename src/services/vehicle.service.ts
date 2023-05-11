@@ -309,3 +309,15 @@ export const getVehiclesNearMe = async (lat: number, lon: number) => {
 
     return { msg: "Vehicles near me fetched", result: newArr };
 };
+
+export const searchVehicles = async (searchString:string) => {
+    const vehicles = await prisma.vehicle.findMany({
+        where: {
+          OR: [
+            { title: { contains: searchString } },
+            { brand: { title: { contains: searchString } } },
+          ],
+        },
+      });
+    return {msg:"Vehicles fetched", result:vehicles}
+}

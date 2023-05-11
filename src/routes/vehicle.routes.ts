@@ -30,6 +30,6 @@ router.delete("/brand/delete/:id", VehicleController.deleteBrandController);
 router.post("/add/vehicle", isLoggedIn,verifyInput(addVehicleSchema),VehicleController.addVehicleController);
 router.get("/listall/vehicle", isLoggedIn,VehicleController.listAllVehicleController);
 router.get("/listall/nearme", isLoggedIn,VehicleController.getVehiclesNearMeController);
-
+router.get("/search", isLoggedIn,VehicleController.searchVehiclesController);
 
 export default router;

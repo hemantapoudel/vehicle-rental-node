@@ -21,6 +21,7 @@ import {
     listAllCategory,
     listAllSubCategory,
     listAllVehicle,
+    searchVehicles,
     updateBrand,
     updateCategory,
     updateSubCategory,
@@ -229,6 +230,19 @@ export async function getVehiclesNearMeController(
 ) {
     try {
         const response = await getVehiclesNearMe(req.body.lat, req.body.lon);
+        return res.status(201).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}
+
+export async function searchVehiclesController(
+    req: Request<{}, {}, { searchString:string }>,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const response = await searchVehicles(req.body.searchString);
         return res.status(201).json({ success: true, data: response });
     } catch (e: any) {
         next(e);
