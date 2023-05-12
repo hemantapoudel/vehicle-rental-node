@@ -25,6 +25,8 @@ import {
     updateBrand,
     updateCategory,
     updateSubCategory,
+    viewIndividualVehicle,
+    viewUnverifiedVehicles,
 } from "../services/vehicle.service";
 
 export async function addCategoryController(
@@ -243,6 +245,32 @@ export async function searchVehiclesController(
 ) {
     try {
         const response = await searchVehicles(req.body.searchString);
+        return res.status(201).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}
+
+export async function viewUnverifiedVehiclesController(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const response = await viewUnverifiedVehicles();
+        return res.status(201).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}
+
+export async function viewIndividualVehicleController(
+    req: Request<{}, {}, { id:string }>,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const response = await viewIndividualVehicle(req.body.id);
         return res.status(201).json({ success: true, data: response });
     } catch (e: any) {
         next(e);

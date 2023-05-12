@@ -10,6 +10,7 @@ import {
 import { calculateDistance } from "../utils/calculateDistance";
 import { prisma } from "../utils/db";
 import config from "../config/env";
+import { CustomError } from "../utils/custom_error";
 
 export const addCategory = async (categoryDetails: AddCategorySchema) => {
     const { title, description, logo } = categoryDetails;
@@ -319,5 +320,76 @@ export const searchVehicles = async (searchString:string) => {
           ],
         },
       });
+    vehicles.map((vehicle) => {
+        vehicle.thumbnail = `${config.UPLOADS}${vehicle.thumbnail}`;
+        return vehicle;
+    });
     return {msg:"Vehicles fetched", result:vehicles}
+}
+
+export const viewUnverifiedVehicles = async () => {
+    const vehicles = await prisma.vehicle.findMany({
+        where:{
+            isVerified:false
+        }
+    })
+    vehicles.map((vehicle) => {
+        vehicle.thumbnail = `${config.UPLOADS}${vehicle.thumbnail}`;
+        return vehicle;
+    });
+    
+    return {msg:"Unverified Vehicles fetched", result:vehicles}
+}
+
+export const viewIndividualVehicle = async (id:string) => {
+    const vehicle = await prisma.vehicle.findUnique({
+        where:{
+            id
+        },
+        
+        select: {
+            id: true,
+            title: true,
+            addedById: true,
+            type: true,
+            category: {
+                select: {
+                    id: true,
+                    title: true,
+                },
+            },
+            subCategory: {
+                select: {
+                    id: true,
+                    title: true,
+                },
+            },
+            brand: {
+                select: {
+                    id: true,
+                    title: true,
+                    logo: true,
+                },
+            },
+            model: true,
+            thumbnail: true,
+            pickupAddress: true,
+            isBooked: true,
+            images:true,
+            bluebookPics:true,
+            insurancePaperPhoto:true,
+            isVerified:true,
+            features:true
+        },
+    })
+    if (!vehicle) {
+        throw new Error('Vehicle not found');
+    }
+    vehicle.thumbnail = `${config.UPLOADS}${vehicle.thumbnail}`;
+    vehicle.images = vehicle.images.map((imageName) => `${config.UPLOADS}${imageName}`);
+    vehicle.bluebookPics = vehicle.bluebookPics.map((imageName) => `${config.UPLOADS}${imageName}`);
+    vehicle.insurancePaperPhoto = `${config.UPLOADS}${vehicle.insurancePaperPhoto}`;
+    vehicle.brand.logo = `${config.UPLOADS}${vehicle.brand.logo}`;
+
+    return {msg:"Vehicle details", result:vehicle}
 }
