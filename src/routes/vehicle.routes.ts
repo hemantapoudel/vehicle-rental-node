@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 import * as VehicleController from "../controllers/vehicle.controller";
-import { isLoggedIn } from "../middlewares/auth.middleware";
+import { isAdminOrModerator, isLoggedIn } from "../middlewares/auth.middleware";
 import { verifyInput } from "../middlewares/verifyInput.middleware";
 import { addBrandSchema, addCategorySchema, addSubCategorySchema, addVehicleSchema } from "../schema/vehicle.schema";
 import { addSubCategory } from "../services/vehicle.service";
@@ -32,5 +32,5 @@ router.get("/listall/nearme", isLoggedIn,VehicleController.getVehiclesNearMeCont
 router.get("/search", isLoggedIn,VehicleController.searchVehiclesController);
 router.get("/vehicle", isLoggedIn,VehicleController.viewIndividualVehicleController);
 router.get("/view/unverified", isLoggedIn,VehicleController.viewUnverifiedVehiclesController);
-
+router.post("/vehicle/verify", isLoggedIn,isAdminOrModerator,VehicleController.verifyVehicleController);
 export default router;
