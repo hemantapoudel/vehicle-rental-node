@@ -55,20 +55,20 @@ export const updateAddress = async (
 
 export const getProfile = async (loggedInUser: any) => {
     const user = await prisma.user.findUnique({
-        where:{
-            id:loggedInUser.id
+        where: {
+            id: loggedInUser.id
         },
-        select:{
-            fullName:true,
-            gender:true,
-            phone:true,
-            email:true,
-            address:true,
+        select: {
+            fullName: true,
+            gender: true,
+            phone: true,
+            email: true,
+            address: true,
 
         }
     })
     //const userProfile = {id:user?.id,fullName:user?.fullName,phone:user?.phone.toString()}
-    return {msg:"Profile fetched",result:{...user,phone:Number(user?.phone)}}
+    return { msg: "Profile fetched", result: { ...user, phone: Number(user?.phone) } }
 };
 
 

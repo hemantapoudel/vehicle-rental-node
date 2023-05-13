@@ -10,6 +10,7 @@ import {
 import { calculateDistance } from "../utils/calculateDistance";
 import { prisma } from "../utils/db";
 import config from "../config/env";
+import { CustomError } from "../utils/custom_error";
 
 export const addCategory = async (categoryDetails: AddCategorySchema) => {
     const { title, description, logo } = categoryDetails;
@@ -27,7 +28,7 @@ export const updateCategory = async (id: string, categoryDetails: any) => {
     const { title, description, logo } = categoryDetails;
     const category = await prisma.category.update({
         where: {
-            id: id
+            id: id,
         },
         data: {
             title,
@@ -39,16 +40,16 @@ export const updateCategory = async (id: string, categoryDetails: any) => {
 };
 
 export const listAllCategory = async () => {
-    const category = await prisma.category.findMany()
+    const category = await prisma.category.findMany();
     return { msg: "ALl Category Fetched", result: category };
 };
 
 export const deleteCategory = async (id: string) => {
     await prisma.category.delete({
         where: {
-            id: id
-        }
-    })
+            id: id,
+        },
+    });
     return { msg: "Category Deleted" };
 };
 
@@ -67,11 +68,14 @@ export const addSubCategory = async (
     return { msg: "sub Category added", result: subCategory };
 };
 
-export const updateSubCategory = async (id: string, subCategoryDetails: any,) => {
+export const updateSubCategory = async (
+    id: string,
+    subCategoryDetails: any,
+) => {
     const { title, description, categoryId, logo } = subCategoryDetails;
     const subCategory = await prisma.subCategory.update({
         where: {
-            id: id
+            id: id,
         },
         data: {
             title,
@@ -84,30 +88,28 @@ export const updateSubCategory = async (id: string, subCategoryDetails: any,) =>
 };
 
 export const listAllSubCategory = async () => {
-    const subCategory = await prisma.subCategory.findMany()
+    const subCategory = await prisma.subCategory.findMany();
     return { msg: "ALl Sub Categories Fetched", result: subCategory };
 };
 
 export const deleteSubCategory = async (id: string) => {
     await prisma.subCategory.delete({
         where: {
-            id: id
-        }
-    })
+            id: id,
+        },
+    });
     return { msg: "Sub-Category Deleted" };
 };
 
 export const findSubCategoryFromCategory = async (categoryId: string) => {
     const subCategory = await prisma.subCategory.findMany({
         where: {
-            categoryId
-        }
-    })
-    console.log()
+            categoryId,
+        },
+    });
+    console.log();
     return { msg: "Sub Categories Fetched", result: subCategory };
 };
-
-
 
 export const addBrand = async (brandDetails: AddBrandSchema) => {
     const { title, description, logo } = brandDetails;
@@ -121,35 +123,34 @@ export const addBrand = async (brandDetails: AddBrandSchema) => {
     return { msg: "Brand added", result: brand };
 };
 
-export const updateBrand = async (id: string, brandDetails: any,) => {
+export const updateBrand = async (id: string, brandDetails: any) => {
     const { title, description, logo } = brandDetails;
     const brand = await prisma.brand.update({
         where: {
-            id: id
+            id: id,
         },
         data: {
             title,
             description,
-            logo
+            logo,
         },
     });
     return { msg: "Brand Updated" };
 };
 
 export const listAllBrands = async () => {
-    const brands = await prisma.brand.findMany()
+    const brands = await prisma.brand.findMany();
     return { msg: "ALl Brands Fetched", result: brands };
 };
 
 export const deleteBrand = async (id: string) => {
     await prisma.brand.delete({
         where: {
-            id: id
-        }
-    })
+            id: id,
+        },
+    });
     return { msg: "Brand Deleted" };
 };
-
 
 export const addVehicle = async (
     vehicleDetails: AddVehicleSchema,
@@ -310,3 +311,112 @@ export const getVehiclesNearMe = async (lat: number, lon: number) => {
 
     return { msg: "Vehicles near me fetched", result: newArr };
 };
+
+export const searchVehicles = async (searchString: string) => {
+    const vehicles = await prisma.vehicle.findMany({
+        where: {
+            OR: [
+                { title: { contains: searchString } },
+                { brand: { title: { contains: searchString } } },
+            ],
+        },
+    });
+    vehicles.map((vehicle) => {
+        vehicle.thumbnail = `${config.UPLOADS}${vehicle.thumbnail}`;
+        return vehicle;
+    });
+    return { msg: "Vehicles fetched", result: vehicles };
+};
+
+export const viewUnverifiedVehicles = async () => {
+    const vehicles = await prisma.vehicle.findMany({
+        where: {
+            isVerified: false,
+        },
+    });
+    vehicles.map((vehicle) => {
+        vehicle.thumbnail = `${config.UPLOADS}${vehicle.thumbnail}`;
+        return vehicle;
+    });
+
+    return { msg: "Unverified Vehicles fetched", result: vehicles };
+};
+
+export const viewIndividualVehicle = async (id: string) => {
+    const vehicle = await prisma.vehicle.findUnique({
+        where: {
+            id,
+        },
+        select: {
+            id: true,
+            title: true,
+            addedById: true,
+            type: true,
+            category: {
+                select: {
+                    id: true,
+                    title: true,
+                },
+            },
+            subCategory: {
+                select: {
+                    id: true,
+                    title: true,
+                },
+            },
+            brand: {
+                select: {
+                    id: true,
+                    title: true,
+                    logo: true,
+                },
+            },
+            model: true,
+            thumbnail: true,
+            pickupAddress: true,
+            isBooked: true,
+            images: true,
+            bluebookPics: true,
+            insurancePaperPhoto: true,
+            isVerified: true,
+            features: true,
+        },
+    });
+    if (!vehicle) {
+        throw new Error("Vehicle not found");
+    }
+    vehicle.thumbnail = `${config.UPLOADS}${vehicle.thumbnail}`;
+    vehicle.images = vehicle.images.map(
+        (imageName) => `${config.UPLOADS}${imageName}`,
+    );
+    vehicle.bluebookPics = vehicle.bluebookPics.map(
+        (imageName) => `${config.UPLOADS}${imageName}`,
+    );
+    vehicle.insurancePaperPhoto = `${config.UPLOADS}${vehicle.insurancePaperPhoto}`;
+    vehicle.brand.logo = `${config.UPLOADS}${vehicle.brand.logo}`;
+
+    return { msg: "Vehicle details", result: vehicle };
+};
+
+export const verifyVehicle = async (id: string) => {
+    const vehicle = await prisma.vehicle.findUnique({
+        where: {
+            id
+        }
+    })
+    if (!vehicle) {
+        throw new Error("Vehicle Not Found")
+    }
+    if (vehicle.isVerified == true) {
+        return { msg: "Vehicle Already Verified" }
+    }
+    await prisma.vehicle.update({
+        where: {
+            id: id
+        },
+        data: {
+            isVerified: true
+        }
+    })
+    return { msg: "Vehicle Verified Successfully" }
+}

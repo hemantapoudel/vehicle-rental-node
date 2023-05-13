@@ -8,7 +8,7 @@ function verificationCodeGen() {
     return Math.floor(100000 + Math.random() * 900000);
 }
 
-function generateJWTToken (data:{id:string,phone:number}) {
+function generateJWTToken (data:{id:string,phone:number, role:string}) {
     const token=jwt.sign(data,config.JWT_SECRET);
     return token;
 }
@@ -87,7 +87,8 @@ export const verifyOTP = async (phone: number, otp:number) => {
 
             let jwttoken = generateJWTToken({
                 id:userdata.id,
-                phone:Number(userdata.phone.toString())
+                phone:Number(userdata.phone.toString()),
+                role:userdata.role
             })
             return {token:jwttoken,msg:"Successfully Registered ! Fillup Personal Details", isProfileUpdated:userdata.isProfileUpdated, isAddressUpdated:userdata.isAddressUpdated}
         } 
@@ -95,7 +96,8 @@ export const verifyOTP = async (phone: number, otp:number) => {
         else{
             let jwttoken = generateJWTToken({
                 id:user.id,
-                phone:Number(user.phone.toString())
+                phone:Number(user.phone.toString()),
+                role:user.role
             })
 
             await prisma.otp.delete({

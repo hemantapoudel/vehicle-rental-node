@@ -19,3 +19,17 @@ export const isLoggedIn = (req: Request, res: Response, next: NextFunction) => {
         throw new CustomError(401, "Unauthorized");
     }
 };
+
+export const isAdminOrModerator = (_req: Request, res: Response, next: NextFunction) => {
+    try {
+        if (res.locals.user.role == "admin" || res.locals.user.role == "moderator") {
+            next();
+        }
+        else {
+            throw new CustomError(403, "Unauthorized");
+        }
+    } catch (error: any) {
+        throw new CustomError(403, "Forbidden");
+    }
+};
+
