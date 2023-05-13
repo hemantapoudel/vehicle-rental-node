@@ -19,4 +19,3 @@ export const isLoggedIn = (req: Request, res: Response, next: NextFunction) => {
         throw new CustomError(401, "Unauthorized");
     }
 };
-

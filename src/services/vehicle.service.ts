@@ -23,11 +23,11 @@ export const addCategory = async (categoryDetails: AddCategorySchema) => {
     return { msg: "Category added", result: category };
 };
 
-export const updateCategory = async (id:string, categoryDetails: any) => {
+export const updateCategory = async (id: string, categoryDetails: any) => {
     const { title, description, logo } = categoryDetails;
     const category = await prisma.category.update({
-        where:{
-            id:id
+        where: {
+            id: id
         },
         data: {
             title,
@@ -35,7 +35,7 @@ export const updateCategory = async (id:string, categoryDetails: any) => {
             logo,
         },
     });
-    return { msg: "Category updated"};
+    return { msg: "Category updated" };
 };
 
 export const listAllCategory = async () => {
@@ -43,13 +43,13 @@ export const listAllCategory = async () => {
     return { msg: "ALl Category Fetched", result: category };
 };
 
-export const deleteCategory = async (id:string) => {
+export const deleteCategory = async (id: string) => {
     await prisma.category.delete({
-        where:{
-            id:id
+        where: {
+            id: id
         }
     })
-    return { msg: "Category Deleted"};
+    return { msg: "Category Deleted" };
 };
 
 export const addSubCategory = async (
@@ -67,11 +67,11 @@ export const addSubCategory = async (
     return { msg: "sub Category added", result: subCategory };
 };
 
-export const updateSubCategory = async (id:string, subCategoryDetails: any,) => {
+export const updateSubCategory = async (id: string, subCategoryDetails: any,) => {
     const { title, description, categoryId, logo } = subCategoryDetails;
     const subCategory = await prisma.subCategory.update({
-        where:{
-            id:id
+        where: {
+            id: id
         },
         data: {
             title,
@@ -80,7 +80,7 @@ export const updateSubCategory = async (id:string, subCategoryDetails: any,) => 
             categoryId,
         },
     });
-    return { msg: "SUbCategory Updated"};
+    return { msg: "SUbCategory Updated" };
 };
 
 export const listAllSubCategory = async () => {
@@ -88,18 +88,18 @@ export const listAllSubCategory = async () => {
     return { msg: "ALl Sub Categories Fetched", result: subCategory };
 };
 
-export const deleteSubCategory = async (id:string) => {
+export const deleteSubCategory = async (id: string) => {
     await prisma.subCategory.delete({
-        where:{
-            id:id
+        where: {
+            id: id
         }
     })
-    return { msg: "Sub-Category Deleted"};
+    return { msg: "Sub-Category Deleted" };
 };
 
-export const findSubCategoryFromCategory = async (categoryId:string) => {
+export const findSubCategoryFromCategory = async (categoryId: string) => {
     const subCategory = await prisma.subCategory.findMany({
-        where:{
+        where: {
             categoryId
         }
     })
@@ -121,11 +121,11 @@ export const addBrand = async (brandDetails: AddBrandSchema) => {
     return { msg: "Brand added", result: brand };
 };
 
-export const updateBrand = async (id:string, brandDetails: any,) => {
+export const updateBrand = async (id: string, brandDetails: any,) => {
     const { title, description, logo } = brandDetails;
     const brand = await prisma.brand.update({
-        where:{
-            id:id
+        where: {
+            id: id
         },
         data: {
             title,
@@ -133,7 +133,7 @@ export const updateBrand = async (id:string, brandDetails: any,) => {
             logo
         },
     });
-    return { msg: "Brand Updated"};
+    return { msg: "Brand Updated" };
 };
 
 export const listAllBrands = async () => {
@@ -141,13 +141,13 @@ export const listAllBrands = async () => {
     return { msg: "ALl Brands Fetched", result: brands };
 };
 
-export const deleteBrand = async (id:string) => {
+export const deleteBrand = async (id: string) => {
     await prisma.brand.delete({
-        where:{
-            id:id
+        where: {
+            id: id
         }
     })
-    return { msg: "Brand Deleted"};
+    return { msg: "Brand Deleted" };
 };
 
 
@@ -218,6 +218,7 @@ export const listAllVehicle = async () => {
                     title: true,
                 },
             },
+            rate: true,
             subCategory: {
                 select: {
                     id: true,

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
-import {} from "../schema/auth.schema";
+import { } from "../schema/auth.schema";
 import {
     AddBrandSchema,
     AddCategorySchema,
@@ -131,7 +131,7 @@ export async function deleteSubCategoryController(
 }
 
 export async function findSubCategoryFromCategoryController(
-    req: Request ,
+    req: Request,
     res: Response,
     next: NextFunction,
 ) {
