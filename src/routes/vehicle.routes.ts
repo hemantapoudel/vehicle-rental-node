@@ -28,9 +28,9 @@ router.delete("/brand/delete/:id", VehicleController.deleteBrandController);
 
 router.post("/add/vehicle", isLoggedIn,verifyInput(addVehicleSchema),VehicleController.addVehicleController);
 router.get("/listall/vehicle", isLoggedIn,VehicleController.listAllVehicleController);
-router.get("/listall/nearme", isLoggedIn,VehicleController.getVehiclesNearMeController);
-router.get("/search", isLoggedIn,VehicleController.searchVehiclesController);
-router.get("/vehicle", isLoggedIn,VehicleController.viewIndividualVehicleController);
+router.post("/listall/nearme", isLoggedIn,VehicleController.getVehiclesNearMeController);
+router.post("/search", isLoggedIn,VehicleController.searchVehiclesController);
+router.post("/vehicle", isLoggedIn,VehicleController.viewIndividualVehicleController);
 router.get("/view/unverified", isLoggedIn,VehicleController.viewUnverifiedVehiclesController);
 router.post("/vehicle/verify", isLoggedIn,isAdminOrModerator,VehicleController.verifyVehicleController);
 export default router;

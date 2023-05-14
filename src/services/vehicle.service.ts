@@ -238,15 +238,15 @@ export const listAllVehicle = async () => {
         },
     });
     vehicles.map((vehicle) => {
-        vehicle.thumbnail = `${config.UPLOADS}${vehicle.thumbnail}`;
-        vehicle.brand.logo = `${config.UPLOADS}${vehicle.brand.logo}`;
+        vehicle.thumbnail = `${config.UPLOADS}/${vehicle.thumbnail}`;
+        vehicle.brand.logo = `${config.UPLOADS}/${vehicle.brand.logo}`;
         return vehicle;
     });
 
     return { msg: "Vehicles fetched", result: vehicles };
 };
 
-export const getVehiclesNearMe = async (lat: number, lon: number) => {
+export const getVehiclesNearMe = async (lat: number, lon: number, radius: number) => {
     let allVehicles = await prisma.vehicle.findMany({
         where: {
             isVerified: true,
@@ -297,14 +297,14 @@ export const getVehiclesNearMe = async (lat: number, lon: number) => {
             distance,
         };
 
-        if (distance <= 15) {
+        if (distance <= radius) {
             newArr.push(newVehicleList);
         }
     }
 
     newArr.map((vehicle) => {
-        vehicle.thumbnail = `${config.UPLOADS}${vehicle.thumbnail}`;
-        vehicle.brand.logo = `${config.UPLOADS}${vehicle.brand.logo}`;
+        vehicle.thumbnail = `${config.UPLOADS}/${vehicle.thumbnail}`;
+        vehicle.brand.logo = `${config.UPLOADS}/${vehicle.brand.logo}`;
         return vehicle;
     });
 
@@ -321,7 +321,7 @@ export const searchVehicles = async (searchString: string) => {
         },
     });
     vehicles.map((vehicle) => {
-        vehicle.thumbnail = `${config.UPLOADS}${vehicle.thumbnail}`;
+        vehicle.thumbnail = `${config.UPLOADS}/${vehicle.thumbnail}`;
         return vehicle;
     });
     return { msg: "Vehicles fetched", result: vehicles };
@@ -334,7 +334,7 @@ export const viewUnverifiedVehicles = async () => {
         },
     });
     vehicles.map((vehicle) => {
-        vehicle.thumbnail = `${config.UPLOADS}${vehicle.thumbnail}`;
+        vehicle.thumbnail = `${config.UPLOADS}/${vehicle.thumbnail}`;
         return vehicle;
     });
 
@@ -384,15 +384,15 @@ export const viewIndividualVehicle = async (id: string) => {
     if (!vehicle) {
         throw new Error("Vehicle not found");
     }
-    vehicle.thumbnail = `${config.UPLOADS}${vehicle.thumbnail}`;
+    vehicle.thumbnail = `${config.UPLOADS}/${vehicle.thumbnail}`;
     vehicle.images = vehicle.images.map(
-        (imageName) => `${config.UPLOADS}${imageName}`,
+        (imageName) => `${config.UPLOADS}/${imageName}`,
     );
     vehicle.bluebookPics = vehicle.bluebookPics.map(
-        (imageName) => `${config.UPLOADS}${imageName}`,
+        (imageName) => `${config.UPLOADS}/${imageName}`,
     );
-    vehicle.insurancePaperPhoto = `${config.UPLOADS}${vehicle.insurancePaperPhoto}`;
-    vehicle.brand.logo = `${config.UPLOADS}${vehicle.brand.logo}`;
+    vehicle.insurancePaperPhoto = `${config.UPLOADS}/${vehicle.insurancePaperPhoto}`;
+    vehicle.brand.logo = `${config.UPLOADS}/${vehicle.brand.logo}`;
 
     return { msg: "Vehicle details", result: vehicle };
 };

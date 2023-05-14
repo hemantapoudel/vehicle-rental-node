@@ -12,7 +12,7 @@ const app = express();
 
 app.use(cors({ origin: "*" }));
 app.use(express.json());
-app.use("/uploads", isLoggedIn, express.static(join(__dirname, "uploads")));
+app.use("/uploads", express.static(join(__dirname, "uploads")));
 app.use("/api/v1", router);
 
 cron.schedule('* * * * *', async () => {

@@ -1,3 +1,5 @@
+import config from "../config/env";
+import { EnumValues } from "zod";
 import { CustomError } from "../utils/custom_error";
 import { prisma } from "../utils/db";
 
@@ -12,7 +14,6 @@ export const booking = async (
             vehicleId: vehicleId,
         },
     });
-    console.log(alreadyBooked);
     if (alreadyBooked) {
         throw new CustomError(400, "Vehicle Already Booked");
     }
@@ -107,6 +108,7 @@ export const myBookings = async (loggedInUser: any) => {
             bookedById: loggedInUser.id,
         },
         select: {
+            id:true,
             Vehicle: {
                 select: {
                     id: true,
@@ -116,10 +118,18 @@ export const myBookings = async (loggedInUser: any) => {
             },
             startDate: true,
             endDate: true,
-            isAccepted: true,
+            status: true,
         },
     });
-    return { msg: "Bookings fetched", result: myBookings };
+    const result = myBookings.map((bookingRequest) => ({
+        id: bookingRequest.id,
+        thumbnail: `${config.UPLOADS}/${bookingRequest.Vehicle.thumbnail}`,
+        vehicle:bookingRequest.Vehicle,
+        startDate: bookingRequest.startDate,
+        endDate: bookingRequest.endDate,
+        status: bookingRequest.status,
+    }));
+    return { msg: "Bookings fetched", result: result };
 };
 
 export const myBookingRequests = async (loggedInUser: any) => {
@@ -136,19 +146,30 @@ export const myBookingRequests = async (loggedInUser: any) => {
                     id: true,
                     title: true,
                     thumbnail: true,
+                    images:true
+                    
                 },
             },
             startDate: true,
             endDate: true,
-            isAccepted: true,
+            status: true,
         },
     });
-    return { msg: "Booking Requests fetched", result: bookingRequests };
+
+    const result = bookingRequests.map((bookingRequest) => ({
+        id: bookingRequest.id,
+        thumbnail: `${config.UPLOADS}/${bookingRequest.Vehicle.thumbnail}`,
+        vehicle:bookingRequest.Vehicle,
+        startDate: bookingRequest.startDate,
+        endDate: bookingRequest.endDate,
+        status: bookingRequest.status,
+    }));
+    return { msg: "Booking Requests fetched", result: result };
 };
 
 export const acceptOrRejectBooking = async (
     loggedInUser: any,
-    isAccepted: boolean,
+    status: any ,
     id: string,
 ) => {
     let update = await prisma.booking.update({
@@ -156,8 +177,8 @@ export const acceptOrRejectBooking = async (
             id,
         },
         data: {
-            isAccepted,
+            status,
         },
     });
-    return { msg: `Booking ${isAccepted ? "Accepted" : "Rejected"}` };
+    return { msg: `Booking ${status}` };
 };
