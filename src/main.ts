@@ -12,12 +12,13 @@ const app = express();
 
 app.use(cors({ origin: "*" }));
 app.use(express.json());
-app.use("/uploads", isLoggedIn, express.static(join(__dirname, "uploads")));
+app.use("/uploads", express.static(join(__dirname, "uploads")));
 app.use("/api/v1", router);
+app.use(express.static('uploads'))
 
 cron.schedule('* * * * *', async () => {
-    await deleteExpiredBookings();
-  });
+  await deleteExpiredBookings();
+});
 
 app.use(customErrorHandler);
 app.use(notFound);

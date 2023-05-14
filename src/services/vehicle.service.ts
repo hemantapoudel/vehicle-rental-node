@@ -352,6 +352,8 @@ export const viewIndividualVehicle = async (id: string) => {
             title: true,
             addedById: true,
             type: true,
+            description: true,
+            rate: true,
             category: {
                 select: {
                     id: true,
