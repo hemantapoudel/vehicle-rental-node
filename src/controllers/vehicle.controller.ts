@@ -227,12 +227,12 @@ export async function listAllVehicleController(
 }
 
 export async function getVehiclesNearMeController(
-    req: Request<{}, {}, { lat: number; lon: number }>,
+    req: Request<{}, {}, { lat: number; lon: number; radius:number }>,
     res: Response,
     next: NextFunction,
 ) {
     try {
-        const response = await getVehiclesNearMe(req.body.lat, req.body.lon);
+        const response = await getVehiclesNearMe(req.body.lat, req.body.lon, req.body.radius);
         return res.status(201).json({ success: true, data: response });
     } catch (e: any) {
         next(e);

@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { booking, cancelBooking, myBookingRequests, myBookings } from "../services/booking.service";
+import { acceptOrRejectBooking, booking, cancelBooking, myBookingRequests, myBookings } from "../services/booking.service";
 
 export async function bookingController(
     req: Request<{}, {}, { vehicleId: string; startDate: Date; endDate: Date }>,
@@ -58,6 +58,21 @@ export async function myBookingRequestsController(
     try {
         const response = await myBookingRequests(
             res.locals.user
+        );
+        return res.status(201).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}
+
+export async function acceptOrRejectController(
+    req: Request<{}, {}, {id:string, status:any  }>,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const response = await acceptOrRejectBooking(
+            res.locals.user, req.body.status, req.body.id
         );
         return res.status(201).json({ success: true, data: response });
     } catch (e: any) {
