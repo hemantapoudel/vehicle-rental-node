@@ -166,8 +166,10 @@ export const addVehicleSchema = z.object({
 
         pickupAddress: z.string({
             required_error: "Pickup Address is required",
-            invalid_type_error: "Pickup Address must be a array of string",
-        }).array(),
+            invalid_type_error: "Pickup Address must be a string",
+        })
+        .array()
+        .length(2),
 
         driveTrain: z.enum([
             "frontWheel",
