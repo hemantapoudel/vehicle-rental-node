@@ -227,7 +227,7 @@ export async function listAllVehicleController(
 }
 
 export async function getVehiclesNearMeController(
-    req: Request<{}, {}, { lat: number; lon: number; radius:number }>,
+    req: Request<{}, {}, { lat: number; lon: number; radius: number }>,
     res: Response,
     next: NextFunction,
 ) {
@@ -240,7 +240,7 @@ export async function getVehiclesNearMeController(
 }
 
 export async function searchVehiclesController(
-    req: Request<{}, {}, { searchString:string }>,
+    req: Request<{}, {}, { searchString: string }>,
     res: Response,
     next: NextFunction,
 ) {
@@ -266,7 +266,7 @@ export async function viewUnverifiedVehiclesController(
 }
 
 export async function viewIndividualVehicleController(
-    req: Request<{}, {}, { id:string }>,
+    req: Request<{}, {}, { id: string }>,
     res: Response,
     next: NextFunction,
 ) {
@@ -279,7 +279,7 @@ export async function viewIndividualVehicleController(
 }
 
 export async function verifyVehicleController(
-    req: Request<{}, {}, { id:string }>,
+    req: Request<{}, {}, { id: string }>,
     res: Response,
     next: NextFunction,
 ) {

@@ -108,12 +108,13 @@ export const myBookings = async (loggedInUser: any) => {
             bookedById: loggedInUser.id,
         },
         select: {
-            id:true,
+            id: true,
             Vehicle: {
                 select: {
                     id: true,
                     title: true,
                     thumbnail: true,
+                    vehicleNumber: true,
                 },
             },
             startDate: true,
@@ -124,7 +125,7 @@ export const myBookings = async (loggedInUser: any) => {
     const result = myBookings.map((bookingRequest) => ({
         id: bookingRequest.id,
         thumbnail: `${config.UPLOADS}/${bookingRequest.Vehicle.thumbnail}`,
-        vehicle:bookingRequest.Vehicle,
+        vehicle: bookingRequest.Vehicle,
         startDate: bookingRequest.startDate,
         endDate: bookingRequest.endDate,
         status: bookingRequest.status,
@@ -146,8 +147,8 @@ export const myBookingRequests = async (loggedInUser: any) => {
                     id: true,
                     title: true,
                     thumbnail: true,
-                    images:true
-                    
+                    images: true
+
                 },
             },
             startDate: true,
@@ -159,7 +160,7 @@ export const myBookingRequests = async (loggedInUser: any) => {
     const result = bookingRequests.map((bookingRequest) => ({
         id: bookingRequest.id,
         thumbnail: `${config.UPLOADS}/${bookingRequest.Vehicle.thumbnail}`,
-        vehicle:bookingRequest.Vehicle,
+        vehicle: bookingRequest.Vehicle,
         startDate: bookingRequest.startDate,
         endDate: bookingRequest.endDate,
         status: bookingRequest.status,
@@ -169,7 +170,7 @@ export const myBookingRequests = async (loggedInUser: any) => {
 
 export const acceptOrRejectBooking = async (
     loggedInUser: any,
-    status: any ,
+    status: any,
     id: string,
 ) => {
     let update = await prisma.booking.update({
