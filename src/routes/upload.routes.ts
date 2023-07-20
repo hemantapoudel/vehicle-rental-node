@@ -7,6 +7,4 @@ const router = Router();
 
 router.post("/image", isLoggedIn, uploader.array('images'), uploadController);
 
-
-
 export default router;

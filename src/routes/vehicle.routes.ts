@@ -26,11 +26,11 @@ router.get("/brand/listall", VehicleController.listAllBrandController);
 router.delete("/brand/delete/:id", VehicleController.deleteBrandController);
 
 
-router.post("/add/vehicle", isLoggedIn,verifyInput(addVehicleSchema),VehicleController.addVehicleController);
-router.get("/listall/vehicle", isLoggedIn,VehicleController.listAllVehicleController);
-router.post("/listall/nearme", isLoggedIn,VehicleController.getVehiclesNearMeController);
-router.post("/search", isLoggedIn,VehicleController.searchVehiclesController);
-router.post("/vehicle", isLoggedIn,VehicleController.viewIndividualVehicleController);
-router.get("/view/unverified", isLoggedIn,VehicleController.viewUnverifiedVehiclesController);
-router.post("/vehicle/verify", isLoggedIn,isAdminOrModerator,VehicleController.verifyVehicleController);
+router.post("/add/vehicle", isLoggedIn, verifyInput(addVehicleSchema), VehicleController.addVehicleController);
+router.get("/listall/vehicle", VehicleController.listAllVehicleController);
+router.post("/listall/nearme", isLoggedIn, VehicleController.getVehiclesNearMeController);
+router.post("/search", isLoggedIn, VehicleController.searchVehiclesController);
+router.post("/vehicle", isLoggedIn, VehicleController.viewIndividualVehicleController);
+router.get("/view/unverified", isLoggedIn, VehicleController.viewUnverifiedVehiclesController);
+router.post("/vehicle/verify", isLoggedIn, isAdminOrModerator, VehicleController.verifyVehicleController);
 export default router;
